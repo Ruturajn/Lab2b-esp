@@ -13,3 +13,5 @@ The following demonstration video shows reading from a register directly. In thi
   `button_status`.
 - It is observed that the value in the register equals `0x00000000` when the button is pressed, so if that condition is met, the `neopixel` LED blinks.
 - Then, the polling of the `BOOT` button and the condition check repeats indefinitely. 
+- The `re_build.sh` file is a `bash` script that removes the exisiting `build` directory, and creates a new one. After that it navigates into it, and calls `cmake`,
+  followed by `make`. This is a convinience script written to automate the build process.
