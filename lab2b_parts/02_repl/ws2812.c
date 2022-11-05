@@ -54,6 +54,7 @@ int main() {
 
     ws2812_program_init(pio, sm, offset, WS2812_PIN, 800000, IS_RGBW);
     
+    while(!stdio_usb_connected());
 
     while(1){
         // Read the register value, before writing
