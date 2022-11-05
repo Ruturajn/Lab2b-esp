@@ -16,3 +16,5 @@ The following demonstration video shows reading from and writing to a register d
 - Then, the user is prompted for an input again. This time, the input is ANDed with the current value stored in the `QTPY_GPIO0_REG` register, and the result
   of that operation is written to `QTPY_GPIO0_REG`.
 - Finally, the updated value is printed out to the console again.
+- The `re_build.sh` file is a `bash` script that removes the exisiting `build` directory, and creates a new one. After that it navigates into it, and calls `cmake`,
+  followed by `make`. This is a convinience script written to automate the build process.
