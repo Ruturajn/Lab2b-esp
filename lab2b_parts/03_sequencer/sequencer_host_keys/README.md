@@ -14,7 +14,7 @@ https://user-images.githubusercontent.com/56625259/200099982-09bffb52-bebc-4565-
 - Once, the recording is complete, the python script, reads the data stored in the text file, and writes it to the console, thereby acting as user input to the RP2040.
 - Based on this data (wait time, i.e. the amount of time for which the LED should sleep before blinking again), the `neopixel` LED blinks.
 - The overall process (i.e. the C code) is very similar to the one explained in the [previous part](https://github.com/Ruturajn/Lab2b-esp/tree/main/lab2b_parts/03_sequencer/sequencer_device_keys).
-- Following, is a screenshot of the recorded data on the host.
+- Following, is a screenshot of the recorded data on the host,
 
 
 ![image](https://user-images.githubusercontent.com/56625259/200099870-8fcbb092-187b-4050-bef4-5c5e0ee715bf.png)
