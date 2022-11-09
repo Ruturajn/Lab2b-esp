@@ -57,24 +57,22 @@ int main() {
     uint offset = pio_add_program(pio, &ws2812_program);
 
     ws2812_program_init(pio, sm, offset, WS2812_PIN, 800000, IS_RGBW);
+    int user_inp = 0;
 
     while(!stdio_usb_connected());
-    
-    int wait_time = 0, idx = 0;
-    int wait_time_arr[NUM_KEY_PRESS] = {0};
 
     while(1){
+
         //----------------------------Record Key presses---------------------------------
+        int wait_time = 0, idx = 0;
+        int wait_time_arr[NUM_KEY_PRESS] = {0};
         
         // Recording the wait time between key pressed.
-        char user_inst;
-        printf("Enter initial inst");
-        sleep_ms(1000);
-        scanf("%c", &user_inst);
-        sleep_ms(1000);
-        printf("You entered: %c\n", user_inst);
-        if (user_inst == 'r'){
-            idx = 0;
+        /* printf("Enter your input\n"); */
+        /* scanf("%c", &user_inp); */
+        while((user_inp = getchar_timeout_us(5000)) < 0);
+        /* printf("This is what you entered:%c", user_inp); */
+        if (user_inp == 'r') {
             while (idx < NUM_KEY_PRESS){
                 uint32_t button_status = register_read(QTPY_BOOT_PIN_REG);
                 if(button_status != 0){
@@ -90,22 +88,21 @@ int main() {
                 sleep_ms(100);
             }
             printf("\n");
-        }else{
+        } if (user_inp == 'p') {
             //----------------------------Replay Key presses---------------------------------
-            idx = NUM_KEY_PRESS;
-            sleep_ms(200);
             int wait_time_input = 0;
+            /* printf("Playing..\n"); */
+            idx = NUM_KEY_PRESS;
             while (idx > 0){
-                printf("Enter delay");
+                /* printf("Waiting for time input"); */
                 scanf("%d", &wait_time_input);
-                /* wait_time_input = wait_time_arr[NUM_KEY_PRESS-idx]; */
+                /* while((wait_time_input = getchar_timeout_us(5000)) < 0); */
+                /* printf("This is what you entered:%d", wait_time_input); */
                 set_neopixel_color(0xff00ff);
                 sleep_ms(500);
                 set_neopixel_color(0);
-                printf("Wait time : %d", wait_time_input);
-                sleep_ms(wait_time_input*CONST_TIME_SCALING_FACTOR);
+                sleep_ms((int)(wait_time_input)*CONST_TIME_SCALING_FACTOR);
                 idx -= 1;
-                printf("idx is : %d\n", idx);
                 printf("Done Blinking this iteration\n");
             }
             printf("Complete\n");

@@ -13,25 +13,24 @@ TIMEOUT = 5 # Read timeout value in seconds
 # Create an array that will store our wait times
 wait_time_arr = []
 # Create a variable that is used to read from the COM port
+wait_time = ''
 
 # Initialize an object of the serial class
 ser = serial.Serial(COM_NAME, BAUDRATE, timeout=TIMEOUT)
-if ser.is_open:
-    wait_time = ser.readline()
-else:
-    print("Not able to open COM")
-    exit(1)
 
 if os.path.exists("recorded_sequence.txt"):
     os.remove("recorded_sequence.txt")
 
+
 while True:
-    user_input = input("Enter your instruction:")
-    if user_input == 'r':
+    print("Starting now..")
+    user_inp = input("Enter your macro:")
+    if user_inp == 'r':
         if os.path.exists("recorded_sequence.txt"):
             os.remove("recorded_sequence.txt")
-        ser.write(b'r')
         # Keep reading till you find an empty line
+        input_val = bytes(user_inp, 'utf-8')
+        ser.write(input_val)
         while (wait_time != b'\r\n'):
             # Check if the port is open
             if ser.is_open:
@@ -47,8 +46,10 @@ while True:
                 final_str = wait_time.decode("utf-8")
                 if final_str != "":
                     file_name.write(wait_time.decode("utf-8"))
-        file_name.close()
-    else:
+        
+        # Close the file
+        file_name.close() 
+    if user_inp == 'p': 
         # Open the file to read the contents
         file_name = open("recorded_sequence.txt", "r")
         
@@ -58,6 +59,11 @@ while True:
         
         # Store the file contents in an array
         file_val_arr = [x for x in file_name]
+        
+        input_val = bytes(user_inp, 'utf-8')
+        ser.write(input_val)
+                
+        wait_time = ser.readline()
         
         # Keep doing this till complete message is read from console
         while (wait_time != b'Complete\r\n'):
@@ -81,11 +87,10 @@ while True:
         
             # Read the output from the console
             wait_time = ser.readline()
-
+        
         # Close the file
         file_name.close()
 
-#######################################################################
-
 # Close the port
 ser.close()
+
