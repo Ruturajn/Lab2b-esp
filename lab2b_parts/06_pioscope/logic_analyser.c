@@ -128,21 +128,20 @@ int main() {
     PIO pio = pio0;
     uint sm = 0;
     uint dma_chan = 0;
+            
+    // We're going to capture into a u32 buffer, for best DMA efficiency. Need
+    // to be careful of rounding in case the number of pins being sampled
+    // isn't a power of 2.
+    uint total_sample_bits = CAPTURE_N_SAMPLES * CAPTURE_PIN_COUNT;
+    total_sample_bits += bits_packed_per_word(CAPTURE_PIN_COUNT) - 1;
+    uint buf_size_words = total_sample_bits / bits_packed_per_word(CAPTURE_PIN_COUNT);
+    uint32_t *capture_buf = malloc(buf_size_words * sizeof(uint32_t));
+    hard_assert(capture_buf);
 
     printf("PIO logic analyser example\n");
 
     while(1) {
         if (register_read(QTPY_BOOT_PIN_REG) == 0) {
-
-            // We're going to capture into a u32 buffer, for best DMA efficiency. Need
-            // to be careful of rounding in case the number of pins being sampled
-            // isn't a power of 2.
-            uint total_sample_bits = CAPTURE_N_SAMPLES * CAPTURE_PIN_COUNT;
-            total_sample_bits += bits_packed_per_word(CAPTURE_PIN_COUNT) - 1;
-            uint buf_size_words = total_sample_bits / bits_packed_per_word(CAPTURE_PIN_COUNT);
-            uint32_t *capture_buf = malloc(buf_size_words * sizeof(uint32_t));
-            hard_assert(capture_buf);
-
 
             logic_analyser_init(pio, sm, CAPTURE_PIN_BASE, CAPTURE_PIN_COUNT, 1.f);
     
