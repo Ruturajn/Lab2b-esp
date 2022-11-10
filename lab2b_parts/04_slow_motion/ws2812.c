@@ -119,7 +119,7 @@ int main() {
                 set_neopixel_color(0xff00ff);
                 sleep_ms(500);
                 set_neopixel_color(0);
-                sleep_ms((int)(wait_time_input)*(CONST_TIME_SCALING_FACTOR+1000));
+                sleep_ms((int)(wait_time_input)*(CONST_TIME_SCALING_FACTOR+500));
                 idx -= 1;
                 printf("Done Blinking this iteration\n");
             }
@@ -137,7 +137,7 @@ int main() {
                 set_neopixel_color(0xff00ff);
                 sleep_ms(500);
                 set_neopixel_color(0);
-                sleep_ms((int)(wait_time_input)*(CONST_TIME_SCALING_FACTOR-50));
+                sleep_ms((int)(wait_time_input)*(CONST_TIME_SCALING_FACTOR-20));
                 idx -= 1;
                 printf("Done Blinking this iteration\n");
             }
