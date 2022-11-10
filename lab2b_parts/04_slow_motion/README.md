@@ -4,6 +4,8 @@ This demonstration video shows, a sequence of `BOOT` button keypresses on the RP
 by reading the file stored on the host. This operation is achieved by encoding ***macros*** to do tasks like recording a sequence (to the host) or playing
 it (on the RP2040) in ***fast-forward*** or ***slow motion*** mode.
 
+https://user-images.githubusercontent.com/56625259/200974608-b451c6da-64ac-4c21-b7d1-a7ec7697081e.mp4
+
 - The process here is very similar to the one implemented in [`sequencer_host_keys_macros`](https://github.com/Ruturajn/Lab2b-esp/tree/main/lab2b_parts/03_sequencer/sequencer_host_keys_macros)
   section of the [`03_sequencer`](https://github.com/Ruturajn/Lab2b-esp/tree/main/lab2b_parts/03_sequencer) part.
 - This code just adds on some extra lines to the aforementioned code and extends it's functionality to enable the user to replay the recording in either
