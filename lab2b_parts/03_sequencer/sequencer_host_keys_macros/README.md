@@ -39,3 +39,5 @@ it (on the RP2040).
  - The `re_build.sh` file is a `bash` script that removes the exisiting `build` directory, and creates a new one. After that it navigates into it, and calls `cmake`,
   followed by `make`. This is a convinience script written to automate the build process.
  - Also, following is a screenshot of the recorded sequence that was stored in the text file on the host,
+
+![image](https://user-images.githubusercontent.com/56625259/200970445-5dd0ec6b-acc1-4169-9e85-ad5e29843ae7.png)
