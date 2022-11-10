@@ -1,0 +1,7 @@
+/lab2b_parts/01_registers/build
+/lab2b_parts/02_repl/build
+/lab2b_parts/03_sequencer/sequencer_device_keys/build
+/lab2b_parts/03_sequencer/sequencer_host_keys/build
+/lab2b_parts/03_sequencer/sequencer_host_keys_macros/build
+/lab2b_parts/04_slow_motion/build
+/lab2b_parts/06_pioscope/build
