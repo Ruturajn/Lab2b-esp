@@ -4,6 +4,9 @@ This demonstration video shows, a sequence of `BOOT` button keypresses on the RP
 by reading the file stored on the host. This operation is achieved by encoding ***macros*** to do tasks like recording a sequence (to the host) or playing
 it (on the RP2040).
 
+https://user-images.githubusercontent.com/56625259/200972717-e51634c8-3d04-41c9-93bd-a67dc2d86f50.mp4
+
+
 - This program too like the last one ([`sequencer_host_keys`](https://github.com/Ruturajn/Lab2b-esp/tree/main/lab2b_parts/03_sequencer/sequencer_host_keys)) has `2` parts
   to it.
 - One of them is the `C` code running on the `RP2040`, and the other is a `python` script named [`rp2040_serial_macros.py`](https://github.com/Ruturajn/Lab2b-esp/blob/main/lab2b_parts/03_sequencer/sequencer_host_keys_macros/rp2040_serial_macros.py)
