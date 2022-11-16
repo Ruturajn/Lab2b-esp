@@ -57,19 +57,55 @@ int main() {
     // todo get free sm
     PIO pio = pio0;
     int sm = 0;
-    int sm1 = 1;
+    int sm_1 = 1;
     uint offset = pio_add_program(pio, &ws2812_program);
     uint offset_1 = pio_add_program(pio, &boot_status_program);
 
     ws2812_program_init(pio, sm, offset, WS2812_PIN, 800000, IS_RGBW);
-    boot_status_program_init(pio, sm1, offset_1, QTPY_BOOT_PIN_NUM);
-    int user_inp = 0;
+    boot_status_program_init(pio, sm_1, offset_1, QTPY_BOOT_PIN_NUM);
+    int button_status = 0;
 
     while(!stdio_usb_connected());
 
     while(1){
-        user_inp = pio_get_boot_status(pio, sm1);
-        printf("%d\n", user_inp);
+
+        //----------------------------Record Key presses---------------------------------
+        int wait_time = 0, idx = 0;
+        int wait_time_arr[NUM_KEY_PRESS] = {0};
+        
+        // Recording the wait time between key pressed.
+        printf("#######################################################################\n");
+        printf("              Use the BOOT Button to record 5 Keypresses               \n");
+        printf("#######################################################################\n");
+        while (idx < NUM_KEY_PRESS){
+            button_status = pio_get_boot_status(pio, sm_1);
+            if(button_status != 0){
+                wait_time+=1;
+            }else{
+                if (wait_time != 0){
+                    printf("Wait time is : %d\n", wait_time);
+                    wait_time_arr[idx] = wait_time;
+                    idx += 1;
+                }
+                wait_time = 0;
+            }
+            sleep_ms(100);
+        }
+
+        //----------------------------Replay Key presses---------------------------------
+        printf("#######################################################################\n");
+        printf("               Replaying the BOOT Button Keypresses                    \n");
+        printf("#######################################################################\n\n");
+        for (int i=0;i<NUM_KEY_PRESS;i++){
+            set_neopixel_color(0xff00ff);
+            sleep_ms(500);
+            set_neopixel_color(0);
+            sleep_ms(wait_time_arr[i]*CONST_TIME_SCALING_FACTOR);
+        } 
+
+        /* sleep_ms(100); */
+        /* user_inp = pio_get_boot_status(pio, sm1); */
+        /* printf("%d\n", user_inp); */
         sleep_ms(100);
     }
 }

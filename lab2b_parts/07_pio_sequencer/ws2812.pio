@@ -84,6 +84,9 @@ static inline void ws2812_parallel_program_init(PIO pio, uint sm, uint offset, u
 }
 %}
 
+
+;-------------------------------------------------------------------------------------------------
+
 ; @author: Ruturaj A. Nanoti
 ; @ brief: This is a pio file to integrate the sequencer with PIO.
 ; Reference: https://github.com/raspberrypi/pico-examples/blob/master/pio/hello_pio/hello.pio
