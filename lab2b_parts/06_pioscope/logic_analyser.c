@@ -20,9 +20,10 @@
 #include "hardware/pio.h"
 #include "hardware/dma.h"
 #include "hardware/structs/bus_ctrl.h"
+#include "registers.h"
+
 #include "/home/ruturajn/Git-Repos/pico/pico-sdk/src/boards/include/boards/adafruit_qtpy_rp2040.h"
 
-#include "registers.h"
 #define QTPY_BOOT_PIN_NUM 21
 #define QTPY_BOOT_PIN_REG ((volatile uint32_t *)(IO_BANK0_BASE + 0x0A8))
 
@@ -31,7 +32,7 @@
 
 const uint CAPTURE_PIN_BASE = 22;
 const uint CAPTURE_PIN_COUNT = 2;
-const uint CAPTURE_N_SAMPLES = 100000;
+const uint CAPTURE_N_SAMPLES = 100;
 
 static inline uint bits_packed_per_word(uint pin_count) {
     // If the number of pins to be sampled divides the shift register size, we
@@ -107,10 +108,8 @@ void print_capture_buf(const uint32_t *buf, uint pin_base, uint pin_count, uint3
             // Data is left-justified in each FIFO entry, hence the (32 - record_size_bits) offset
             uint word_mask = 1u << (bit_index % record_size_bits + 32 - record_size_bits);
             printf(buf[word_index] & word_mask ? "-" : "_");
-            /* sleep_ms(100); */
         }
         printf("\n");
-        sleep_ms(100);
     }
 }
 
@@ -118,8 +117,7 @@ int main() {
     gpio_init(QTPY_BOOT_PIN_NUM);
     gpio_set_dir(QTPY_BOOT_PIN_NUM, GPIO_IN);
     stdio_init_all();
-
-    while(!stdio_usb_connected());
+    printf("PIO logic analyser example\n");
     // Grant high bus priority to the DMA, so it can shove the processors out
     // of the way. This should only be needed if you are pushing things up to
     // >16bits/clk here, i.e. if you need to saturate the bus completely.
@@ -128,23 +126,26 @@ int main() {
     PIO pio = pio0;
     uint sm = 0;
     uint dma_chan = 0;
-            
-    // We're going to capture into a u32 buffer, for best DMA efficiency. Need
-    // to be careful of rounding in case the number of pins being sampled
-    // isn't a power of 2.
-    uint total_sample_bits = CAPTURE_N_SAMPLES * CAPTURE_PIN_COUNT;
-    total_sample_bits += bits_packed_per_word(CAPTURE_PIN_COUNT) - 1;
-    uint buf_size_words = total_sample_bits / bits_packed_per_word(CAPTURE_PIN_COUNT);
-    uint32_t *capture_buf = malloc(buf_size_words * sizeof(uint32_t));
-    hard_assert(capture_buf);
 
-    printf("PIO logic analyser example\n");
-
+    logic_analyser_init(pio, sm, CAPTURE_PIN_BASE, CAPTURE_PIN_COUNT, 64.f);
+    
     while(1) {
         if (register_read(QTPY_BOOT_PIN_REG) == 0) {
 
-            logic_analyser_init(pio, sm, CAPTURE_PIN_BASE, CAPTURE_PIN_COUNT, 1.f);
-    
+            // We're going to capture into a u32 buffer, for best DMA efficiency. Need
+            // to be careful of rounding in case the number of pins being sampled
+            // isn't a power of 2.
+            uint total_sample_bits = CAPTURE_N_SAMPLES * CAPTURE_PIN_COUNT;
+            total_sample_bits += bits_packed_per_word(CAPTURE_PIN_COUNT) - 1;
+            uint buf_size_words = total_sample_bits / bits_packed_per_word(CAPTURE_PIN_COUNT);
+            uint32_t *capture_buf = malloc(buf_size_words * sizeof(uint32_t));
+            hard_assert(capture_buf);
+
+
+            printf("Arming trigger\n");
+            logic_analyser_arm(pio, sm, dma_chan, capture_buf, buf_size_words, CAPTURE_PIN_BASE, true);
+
+            /* printf("Starting PWM example\n"); */
             /* // PWM example: ----------------------------------------------------------- */
             /* gpio_set_function(CAPTURE_PIN_BASE, GPIO_FUNC_PWM); */
             /* gpio_set_function(CAPTURE_PIN_BASE + 1, GPIO_FUNC_PWM); */
@@ -160,8 +161,11 @@ int main() {
             /* // Enable this PWM slice */
             /* pwm_hw->slice[0].csr = PWM_CH0_CSR_EN_BITS; */
             /* // ------------------------------------------------------------------------ */
-    
+
+            // The logic analyser should have started capturing as soon as it saw the
+            // first transition. Wait until the last sample comes in from the DMA.
             dma_channel_wait_for_finish_blocking(dma_chan);
+
             print_capture_buf(capture_buf, CAPTURE_PIN_BASE, CAPTURE_PIN_COUNT, CAPTURE_N_SAMPLES);
         }
         sleep_ms(500);
