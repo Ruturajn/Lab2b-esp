@@ -22,18 +22,38 @@ void config_adps(PIO pio, uint sm){
     // The register address for the slave needs to be
     // prepended to the data.
     uint8_t txbuf[2] = {0};
-    txbuf[0] = ADPS_ENABLE_REGISTER;
-    txbuf[1] = ADPS_ENABLE_PON;
+    /* txbuf[0] = ADPS_ENABLE_REGISTER; */
+    /* /1* txbuf[1] = ADPS_ENABLE_PON | ADPS_ENABLE_PEN | ADPS_ENABLE_AEN; *1/ */
+    /* txbuf[1] = ADPS_ENABLE_PON | ADPS_ENABLE_AEN; */
+    /* pio_i2c_write_blocking(pio, sm, ADPS_ADDRESS, txbuf, 2); */
+
+    // Set Color Integration time to `50` => 256 - 50 = 206 = 0xCE
+    txbuf[0] = ATIME_REGISTER;
+    txbuf[1] = (uint8_t)(0x81);
     pio_i2c_write_blocking(pio, sm, ADPS_ADDRESS, txbuf, 2);
+    
+    /* txbuf[0] = WAIT_TIME_REGISTER; */
+    /* txbuf[1] = WAIT_TIME_REGISTER_WTIME; */
+    /* pio_i2c_write_blocking(pio, sm, ADPS_ADDRESS, txbuf, 2); */
+    
+    /* txbuf[0] = PERS_REGISTER; */
+    /* txbuf[1] = PERS_REGISTER_PERS; */
+    /* pio_i2c_write_blocking(pio, sm, ADPS_ADDRESS, txbuf, 2); */
+
+
+    /* txbuf[0] = CONFIG_REGISTER; */
+    /* txbuf[1] = CONFIG_REGISTER_CPSIEN; */
+    /* pio_i2c_write_blocking(pio, sm, ADPS_ADDRESS, txbuf, 2); */
 
     // Config the Cotrol Register.
     txbuf[0] = ADPS_CONTROL_ONE_REGISTER;
-    txbuf[1] = ADPS_CONTROL_ONE_LDRIVE | ADPS_CONTROL_ONE_PGAIN | ADPS_CONTROL_ONE_AGAIN;
+    /* txbuf[1] = ADPS_CONTROL_ONE_LDRIVE | ADPS_CONTROL_ONE_PGAIN | ADPS_CONTROL_ONE_AGAIN; */
+    txbuf[1] = ADPS_CONTROL_ONE_AGAIN;
     pio_i2c_write_blocking(pio, sm, ADPS_ADDRESS, txbuf, 2);
 
     // Enable Ambient Light and Proximity Sensor
     txbuf[0] = ADPS_ENABLE_REGISTER;
-    txbuf[1] = ADPS_ENABLE_AEN | ADPS_ENABLE_PEN;
+    txbuf[1] = ADPS_ENABLE_PON | ADPS_ENABLE_AEN;
     pio_i2c_write_blocking(pio, sm, ADPS_ADDRESS, txbuf, 2);
 }
 
@@ -57,7 +77,7 @@ int main() {
     printf("Starting PIO I2C ADPS9960 Interface\n");
     
     // Start I2C commuinication.
-    pio_i2c_start(pio, sm);
+    /* pio_i2c_start(pio, sm); */
 
     // Configure the ADPS Sensor.
     config_adps(pio, sm);
@@ -68,6 +88,7 @@ int main() {
         // from the ALS and Proximity engine.
         uint8_t rxbuf[1] = {0};
         adps_read(pio, sm, STATUS_REGISTER, rxbuf, 1);
+        adps_read(pio, sm, ID_REGISTER, rxbuf, 1);
         printf("The value in RX Buffer is : 0x%08x\n", rxbuf[0]);
 
         // Use the mask to check if our Proximity and color data is ready to be read.
@@ -75,41 +96,14 @@ int main() {
         if ((rxbuf[0] & STATUS_REGISTER_PVALID) == STATUS_REGISTER_PVALID) {
             adps_read(pio, sm, PROXIMITY_DATA_REGISTER, data_arr, 1);
             printf("The Proximity Data : %d\n", data_arr[0]);
-        } if ((rxbuf[0] & STATUS_REGISTER_AVALID) == STATUS_REGISTER_AVALID) {
+        } 
+        if ((rxbuf[0] & STATUS_REGISTER_AVALID) == STATUS_REGISTER_AVALID) {
             adps_read(pio, sm, RGBC_DATA_REGISTER_CDATAL, data_arr, 8);
-            /* adps_read(pio, sm, RGBC_DATA_REGISTER_CDATAH, &data_arr[1], 1); */
-            /* adps_read(pio, sm, RGBC_DATA_REGISTER_RDATAL, &data_arr[2], 1); */
-            /* adps_read(pio, sm, RGBC_DATA_REGISTER_RDATAH, &data_arr[3], 1); */
-            /* adps_read(pio, sm, RGBC_DATA_REGISTER_GDATAL, &data_arr[4], 1); */
-            /* adps_read(pio, sm, RGBC_DATA_REGISTER_GDATAH, &data_arr[5], 1); */
-            /* adps_read(pio, sm, RGBC_DATA_REGISTER_BDATAL, &data_arr[6], 1); */
-            /* adps_read(pio, sm, RGBC_DATA_REGISTER_BDATAH, &data_arr[7], 1); */
             printf("The Color Data : %d\n", data_arr[1]);
         }
 
         sleep_ms(500); 
     }
  
-    /* printf("\nPIO I2C Bus Scan\n"); */
-    /* printf("   0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F\n"); */
-
-    /* for (int addr = 0; addr < (1 << 7); ++addr) { */
-    /*     if (addr % 16 == 0) { */
-    /*         printf("%02x ", addr); */
-    /*     } */
-    /*     // Perform a 0-byte read from the probe address. The read function */
-    /*     // returns a negative result NAK'd any time other than the last data */
-    /*     // byte. Skip over reserved addresses. */
-    /*     int result; */
-    /*     if (reserved_addr(addr)) */
-    /*         result = -1; */
-    /*     else */
-    /*         result = pio_i2c_read_blocking(pio, sm, addr, NULL, 0); */
-
-    /*     printf(result < 0 ? "." : "@"); */
-    /*     printf(addr % 16 == 15 ? "\n" : "  "); */
-    /* } */
-    /* printf("Done.\n"); */
-
     return 0;
 }

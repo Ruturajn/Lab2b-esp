@@ -16,6 +16,22 @@
 #define ADPS_ENABLE_PEN ((volatile uint8_t)(1u << 2)) // Proximity enable bit
 
 
+// ATIME REGISTER (0X81)
+#define ATIME_REGISTER ((volatile uint8_t)(0x81))
+
+// WAIT TIME REGISTER (0X83)
+#define WAIT_TIME_REGISTER ((volatile uint8_t)(0x83))
+#define WAIT_TIME_REGISTER_WTIME ((volatile uint8_t)(0xF6))
+
+// PERS REGISTER (0X8C)
+#define PERS_REGISTER ((volatile uint8_t)(0x8C))
+#define PERS_REGISTER_PERS ((volatile uint8_t)(1u << 0 | 1u << 1))
+
+// CONFIG REGISTER (0x90)
+#define CONFIG_REGISTER ((volatile uint8_t)(0x90))
+#define CONFIG_REGISTER_CPSIEN ((volatile uint8_t)(1u << 6))
+
+
 // CONTROL REGISTER ONE (0x8F)
 #define ADPS_CONTROL_ONE_REGISTER ((volatile uint8_t)(0x8F))
 #define ADPS_CONTROL_ONE_LDRIVE ((volatile uint8_t)(0u << 7 | 0u << 6)) // Set LED Drive current to 100 mA
