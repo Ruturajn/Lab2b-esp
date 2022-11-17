@@ -2,7 +2,7 @@
 
 The demonstration video below shows the I2C trace captured on PuTTY.
 
-https://user-images.githubusercontent.com/56625259/202349881-a7d310e9-fcde-42be-bf1e-794808edc22e.mp4
+https://user-images.githubusercontent.com/56625259/202372695-2b449341-d8a1-4097-b59c-7c7ba716f75a.mp4
 
 - The `logic_analyser` example from `pico-examples` was adapted to capture an I2C trace whenever the `BOOT` button was pressed.
 - The capture included both the `SCL` and `SDA` pins.
