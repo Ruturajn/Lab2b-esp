@@ -53,7 +53,7 @@ void config_adps(PIO pio, uint sm){
 
     // Enable Ambient Light and Proximity Sensor
     txbuf[0] = ADPS_ENABLE_REGISTER;
-    txbuf[1] = ADPS_ENABLE_PON | ADPS_ENABLE_AEN;
+    txbuf[1] = ADPS_ENABLE_PON | ADPS_ENABLE_AEN | ADPS_ENABLE_PEN;
     pio_i2c_write_blocking(pio, sm, ADPS_ADDRESS, txbuf, 2);
 }
 
@@ -89,17 +89,21 @@ int main() {
         uint8_t rxbuf[1] = {0};
         adps_read(pio, sm, STATUS_REGISTER, rxbuf, 1);
         adps_read(pio, sm, ID_REGISTER, rxbuf, 1);
-        printf("The value in RX Buffer is : 0x%08x\n", rxbuf[0]);
+        /* printf("The value in RX Buffer is : 0x%08x\n", rxbuf[0]); */
 
         // Use the mask to check if our Proximity and color data is ready to be read.
         uint8_t data_arr[8] = {0};
         if ((rxbuf[0] & STATUS_REGISTER_PVALID) == STATUS_REGISTER_PVALID) {
             adps_read(pio, sm, PROXIMITY_DATA_REGISTER, data_arr, 1);
-            printf("The Proximity Data : %d\n", data_arr[0]);
+            printf("The Proximity Data : %d\n", data_arr[0] - 230);
         } 
         if ((rxbuf[0] & STATUS_REGISTER_AVALID) == STATUS_REGISTER_AVALID) {
             adps_read(pio, sm, RGBC_DATA_REGISTER_CDATAL, data_arr, 8);
-            printf("The Color Data : %d\n", data_arr[1]);
+            uint16_t c_val = (data_arr[1] << 8 | data_arr[0]); 
+            uint16_t r_val = (data_arr[3] << 8 | data_arr[2]); 
+            uint16_t g_val = (data_arr[5] << 8 | data_arr[4]); 
+            uint16_t b_val = (data_arr[7] << 8 | data_arr[6]); 
+            printf("The Color Data : (%d, %d, %d, %d)\n", r_val, g_val, b_val, c_val);
         }
 
         sleep_ms(500); 
