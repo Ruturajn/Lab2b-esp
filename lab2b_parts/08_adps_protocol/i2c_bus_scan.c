@@ -22,32 +22,14 @@ void config_adps(PIO pio, uint sm){
     // The register address for the slave needs to be
     // prepended to the data.
     uint8_t txbuf[2] = {0};
-    /* txbuf[0] = ADPS_ENABLE_REGISTER; */
-    /* /1* txbuf[1] = ADPS_ENABLE_PON | ADPS_ENABLE_PEN | ADPS_ENABLE_AEN; *1/ */
-    /* txbuf[1] = ADPS_ENABLE_PON | ADPS_ENABLE_AEN; */
-    /* pio_i2c_write_blocking(pio, sm, ADPS_ADDRESS, txbuf, 2); */
 
     // Set Color Integration time to `50` => 256 - 50 = 206 = 0xCE
     txbuf[0] = ATIME_REGISTER;
     txbuf[1] = (uint8_t)(0x81);
     pio_i2c_write_blocking(pio, sm, ADPS_ADDRESS, txbuf, 2);
-    
-    /* txbuf[0] = WAIT_TIME_REGISTER; */
-    /* txbuf[1] = WAIT_TIME_REGISTER_WTIME; */
-    /* pio_i2c_write_blocking(pio, sm, ADPS_ADDRESS, txbuf, 2); */
-    
-    /* txbuf[0] = PERS_REGISTER; */
-    /* txbuf[1] = PERS_REGISTER_PERS; */
-    /* pio_i2c_write_blocking(pio, sm, ADPS_ADDRESS, txbuf, 2); */
-
-
-    /* txbuf[0] = CONFIG_REGISTER; */
-    /* txbuf[1] = CONFIG_REGISTER_CPSIEN; */
-    /* pio_i2c_write_blocking(pio, sm, ADPS_ADDRESS, txbuf, 2); */
 
     // Config the Cotrol Register.
     txbuf[0] = ADPS_CONTROL_ONE_REGISTER;
-    /* txbuf[1] = ADPS_CONTROL_ONE_LDRIVE | ADPS_CONTROL_ONE_PGAIN | ADPS_CONTROL_ONE_AGAIN; */
     txbuf[1] = ADPS_CONTROL_ONE_AGAIN;
     pio_i2c_write_blocking(pio, sm, ADPS_ADDRESS, txbuf, 2);
 
@@ -89,7 +71,6 @@ int main() {
         uint8_t rxbuf[1] = {0};
         adps_read(pio, sm, STATUS_REGISTER, rxbuf, 1);
         adps_read(pio, sm, ID_REGISTER, rxbuf, 1);
-        /* printf("The value in RX Buffer is : 0x%08x\n", rxbuf[0]); */
 
         // Use the mask to check if our Proximity and color data is ready to be read.
         uint8_t data_arr[8] = {0};
