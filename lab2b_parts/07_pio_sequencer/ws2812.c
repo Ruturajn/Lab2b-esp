@@ -63,49 +63,55 @@ int main() {
 
     ws2812_program_init(pio, sm, offset, WS2812_PIN, 800000, IS_RGBW);
     boot_status_program_init(pio, sm_1, offset_1, QTPY_BOOT_PIN_NUM);
-    int button_status = 0;
+    int user_inp = 0;
 
     while(!stdio_usb_connected());
 
     while(1){
-
         //----------------------------Record Key presses---------------------------------
         int wait_time = 0, idx = 0;
         int wait_time_arr[NUM_KEY_PRESS] = {0};
         
         // Recording the wait time between key pressed.
-        printf("#######################################################################\n");
-        printf("              Use the BOOT Button to record 5 Keypresses               \n");
-        printf("#######################################################################\n");
-        while (idx < NUM_KEY_PRESS){
-            button_status = pio_get_boot_status(pio, sm_1);
-            if(button_status != 0){
-                wait_time+=1;
-            }else{
-                if (wait_time != 0){
-                    printf("Wait time is : %d\n", wait_time);
-                    wait_time_arr[idx] = wait_time;
-                    idx += 1;
+        /* printf("Enter your input\n"); */
+        /* scanf("%c", &user_inp); */
+        while((user_inp = getchar_timeout_us(5000)) < 0);
+        /* printf("This is what you entered:%c", user_inp); */
+        if (user_inp == 'r') {
+            while (idx < NUM_KEY_PRESS){
+                uint32_t button_status = pio_get_boot_status(pio, sm_1);
+                if(button_status != 0){
+                    wait_time+=1;
+                }else{
+                    if (wait_time != 0){
+                        printf("%d\n", wait_time);
+                        wait_time_arr[idx] = wait_time;
+                        idx += 1;
+                    }
+                    wait_time = 0;
                 }
-                wait_time = 0;
+                sleep_ms(100);
             }
-            sleep_ms(100);
+            printf("\n");
+        } if (user_inp == 'p') {
+            //----------------------------Replay Key presses---------------------------------
+            int wait_time_input = 0;
+            /* printf("Playing..\n"); */
+            idx = NUM_KEY_PRESS;
+            while (idx > 0){
+                /* printf("Waiting for time input"); */
+                scanf("%d", &wait_time_input);
+                /* while((wait_time_input = getchar_timeout_us(5000)) < 0); */
+                /* printf("This is what you entered:%d", wait_time_input); */
+                set_neopixel_color(0xff00ff);
+                sleep_ms(500);
+                set_neopixel_color(0);
+                sleep_ms((int)(wait_time_input)*CONST_TIME_SCALING_FACTOR);
+                idx -= 1;
+                printf("Done Blinking this iteration\n");
+            }
+            printf("Complete\n");
         }
-
-        //----------------------------Replay Key presses---------------------------------
-        printf("#######################################################################\n");
-        printf("               Replaying the BOOT Button Keypresses                    \n");
-        printf("#######################################################################\n\n");
-        for (int i=0;i<NUM_KEY_PRESS;i++){
-            set_neopixel_color(0xff00ff);
-            sleep_ms(500);
-            set_neopixel_color(0);
-            sleep_ms(wait_time_arr[i]*CONST_TIME_SCALING_FACTOR);
-        } 
-
-        /* sleep_ms(100); */
-        /* user_inp = pio_get_boot_status(pio, sm1); */
-        /* printf("%d\n", user_inp); */
         sleep_ms(100);
     }
 }
