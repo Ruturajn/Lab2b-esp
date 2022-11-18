@@ -29,6 +29,6 @@
 
   ***Ans***: I spent a lot of time trying to interface the `APDS9960` sensor with the `RP2040`, i.e. get it to send over the color data. Finally, I had
   to write a [header file](https://github.com/Ruturajn/Lab2b-esp/blob/main/lab2b_parts/08_apds_protocol/apds_registers.h) containing the register 
-  definitions (obtained by reading the datasheet) and bit masks for configuring the `APDS9960` sensor coorectly. This helped in clarifying the exact
+  definitions (obtained by reading the datasheet) and bit masks for configuring the `APDS9960` sensor correctly. This helped in clarifying the exact
   path that needed to be taken for modifying the control register, and abstracting away the hexadecimal values with macros that represented the register names
   and their bit definitions according to the datasheet.
