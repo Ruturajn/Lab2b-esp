@@ -18,7 +18,7 @@ target_sources(pio_i2c_bus_scan PRIVATE
         pio_i2c.c
         pio_i2c.h
         registers.h
-        adps_registers.h
+        apds_registers.h
         )
 
 target_link_libraries(pio_i2c_bus_scan PRIVATE pico_stdlib hardware_pio)

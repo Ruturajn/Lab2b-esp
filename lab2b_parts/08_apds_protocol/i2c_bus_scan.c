@@ -7,7 +7,7 @@
 #include "hardware/clocks.h"
 
 #include "registers.h"
-#include "adps_registers.h"
+#include "apds_registers.h"
 #include "/home/ruturajn/Git-Repos/pico/pico-sdk/src/boards/include/boards/adafruit_qtpy_rp2040.h"
 
 #define PIN_SDA 22
@@ -18,7 +18,7 @@ bool reserved_addr(uint8_t addr) {
 }
 
 void config_adps(PIO pio, uint sm){
-    // Power ON the ADPS
+    // Power ON the APDS
     // The register address for the slave needs to be
     // prepended to the data.
     uint8_t txbuf[2] = {0};
@@ -26,23 +26,23 @@ void config_adps(PIO pio, uint sm){
     // Set Color Integration time to `50` => 256 - 50 = 206 = 0xCE
     txbuf[0] = ATIME_REGISTER;
     txbuf[1] = (uint8_t)(0x81);
-    pio_i2c_write_blocking(pio, sm, ADPS_ADDRESS, txbuf, 2);
+    pio_i2c_write_blocking(pio, sm, APDS_ADDRESS, txbuf, 2);
 
     // Config the Cotrol Register.
-    txbuf[0] = ADPS_CONTROL_ONE_REGISTER;
-    txbuf[1] = ADPS_CONTROL_ONE_AGAIN;
-    pio_i2c_write_blocking(pio, sm, ADPS_ADDRESS, txbuf, 2);
+    txbuf[0] = APDS_CONTROL_ONE_REGISTER;
+    txbuf[1] = APDS_CONTROL_ONE_AGAIN;
+    pio_i2c_write_blocking(pio, sm, APDS_ADDRESS, txbuf, 2);
 
     // Enable Ambient Light and Proximity Sensor
-    txbuf[0] = ADPS_ENABLE_REGISTER;
-    txbuf[1] = ADPS_ENABLE_PON | ADPS_ENABLE_AEN | ADPS_ENABLE_PEN;
-    pio_i2c_write_blocking(pio, sm, ADPS_ADDRESS, txbuf, 2);
+    txbuf[0] = APDS_ENABLE_REGISTER;
+    txbuf[1] = APDS_ENABLE_PON | APDS_ENABLE_AEN | APDS_ENABLE_PEN;
+    pio_i2c_write_blocking(pio, sm, APDS_ADDRESS, txbuf, 2);
 }
 
 void adps_read(PIO pio, uint sm, uint8_t reg_addr, uint8_t *rxbuf, uint num_bytes) {
     // Read from `reg_addr`.
-    pio_i2c_write_blocking(pio, sm, ADPS_ADDRESS, &reg_addr, 1);  
-    pio_i2c_read_blocking(pio, sm, ADPS_ADDRESS, rxbuf, num_bytes);
+    pio_i2c_write_blocking(pio, sm, APDS_ADDRESS, &reg_addr, 1);  
+    pio_i2c_read_blocking(pio, sm, APDS_ADDRESS, rxbuf, num_bytes);
 }
 
 int main() {
@@ -56,12 +56,12 @@ int main() {
     // Wait until USB is connected.
     while(!stdio_usb_connected());
 
-    printf("Starting PIO I2C ADPS9960 Interface\n");
+    printf("Starting PIO I2C APDS9960 Interface\n");
     
     // Start I2C commuinication.
     /* pio_i2c_start(pio, sm); */
 
-    // Configure the ADPS Sensor.
+    // Configure the APDS Sensor.
     config_adps(pio, sm);
 
     while(1) {
