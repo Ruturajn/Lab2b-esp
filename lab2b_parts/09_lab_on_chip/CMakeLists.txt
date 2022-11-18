@@ -19,7 +19,7 @@ target_sources(pio_i2c_bus_scan PRIVATE
         pio_i2c.c
         pio_i2c.h
         registers.h
-        adps_registers.h
+        apds_registers.h
         ws2812.h
         )
 

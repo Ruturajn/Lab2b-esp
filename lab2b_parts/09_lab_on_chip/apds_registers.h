@@ -1,19 +1,19 @@
 // @author: Ruturaj A. Nanoti
-// @brief: Some Register definitions for the ADPS9960 Sensor.
+// @brief: Some Register definitions for the APDS9960 Sensor.
 
-#ifndef ADPS_REGISTERS_H
-#define ADPS_REGISTERS_H
+#ifndef APDS_REGISTERS_H
+#define APDS_REGISTERS_H
 
 
-#define ADPS_ADDRESS ((volatile uint8_t)(0x39))
+#define APDS_ADDRESS ((volatile uint8_t)(0x39))
 
-// Defining the register and specific bits in those registers for the ADPS Protocol
+// Defining the register and specific bits in those registers for the APDS Protocol
 
 // ENABLE REGISTER (0X80)
-#define ADPS_ENABLE_REGISTER ((volatile uint8_t)(0x80))
-#define ADPS_ENABLE_PON ((volatile uint8_t)(1u << 0)) // Power ON bit
-#define ADPS_ENABLE_AEN ((volatile uint8_t)(1u << 1)) // Ambient light sensor enable bit
-#define ADPS_ENABLE_PEN ((volatile uint8_t)(1u << 2)) // Proximity enable bit
+#define APDS_ENABLE_REGISTER ((volatile uint8_t)(0x80))
+#define APDS_ENABLE_PON ((volatile uint8_t)(1u << 0)) // Power ON bit
+#define APDS_ENABLE_AEN ((volatile uint8_t)(1u << 1)) // Ambient light sensor enable bit
+#define APDS_ENABLE_PEN ((volatile uint8_t)(1u << 2)) // Proximity enable bit
 
 
 // ATIME REGISTER (0X81)
@@ -33,10 +33,10 @@
 
 
 // CONTROL REGISTER ONE (0x8F)
-#define ADPS_CONTROL_ONE_REGISTER ((volatile uint8_t)(0x8F))
-#define ADPS_CONTROL_ONE_LDRIVE ((volatile uint8_t)(0u << 7 | 0u << 6)) // Set LED Drive current to 100 mA
-#define ADPS_CONTROL_ONE_PGAIN ((volatile uint8_t)(1u << 3 | 0u << 2)) // Set Proximity gain to 4x
-#define ADPS_CONTROL_ONE_AGAIN ((volatile uint8_t)(0u << 1 | 1u << 0)) // Set ALS and color gain to 4x
+#define APDS_CONTROL_ONE_REGISTER ((volatile uint8_t)(0x8F))
+#define APDS_CONTROL_ONE_LDRIVE ((volatile uint8_t)(0u << 7 | 0u << 6)) // Set LED Drive current to 100 mA
+#define APDS_CONTROL_ONE_PGAIN ((volatile uint8_t)(1u << 3 | 0u << 2)) // Set Proximity gain to 4x
+#define APDS_CONTROL_ONE_AGAIN ((volatile uint8_t)(0u << 1 | 1u << 0)) // Set ALS and color gain to 4x
 
 // STATUS REGISTER (0X93)
 #define STATUS_REGISTER ((volatile uint8_t)(0x93))
