@@ -99,7 +99,7 @@ uint32_t read_prox_and_color(PIO pio, uint sm){
     } else if ((g_val > r_val) && (g_val > b_val)) {
         final_color_packet = ((uint8_t)((g_val*255) / 65536) << 8);
     } else if ((b_val > r_val) && (b_val > r_val)) {
-        final_color_packet = (uint8_t)(b_val*255) / 65536);
+        final_color_packet = (uint8_t)((b_val*255) / 65536);
     }
     return final_color_packet;
 }
@@ -135,7 +135,7 @@ int main() {
     while(1) {
         // Call the read_prox_and_color function
         color_data = read_prox_and_color(pio_1, sm_1);
-        printf("The Color Packet: 0x%08x\n", color_data);
+        printf("The Color Packet: 0x%06x\n", color_data);
         set_neopixel_color(color_data);
         sleep_ms(500);
         set_neopixel_color(0);
