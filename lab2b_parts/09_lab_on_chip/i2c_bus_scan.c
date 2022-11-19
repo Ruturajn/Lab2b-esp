@@ -44,9 +44,9 @@ void config_adps(PIO pio, uint sm){
     // prepended to the data.
     uint8_t txbuf[2] = {0};
 
-    // Set Color Integration time to `50` => 256 - 50 = 206 = 0xCE
+    // Set Color Integration time
     txbuf[0] = ATIME_REGISTER;
-    txbuf[1] = (uint8_t)(0x81);
+    txbuf[1] = (uint8_t)(0xFF);
     pio_i2c_write_blocking(pio, sm, APDS_ADDRESS, txbuf, 2);
 
     // Config the Cotrol Register.
@@ -98,7 +98,7 @@ uint32_t read_prox_and_color(PIO pio, uint sm){
         final_color_packet = ((uint8_t)((r_val*255) / 65536) << 16);
     } else if ((g_val > r_val) && (g_val > b_val)) {
         final_color_packet = ((uint8_t)((g_val*255) / 65536) << 8);
-    } else if ((b_val > r_val) && (b_val > r_val)) {
+    } else if ((b_val > r_val) && (b_val > g_val)) {
         final_color_packet = (uint8_t)((b_val*255) / 65536);
     }
     return final_color_packet;
