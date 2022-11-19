@@ -2,7 +2,8 @@
 
 The following demonstration video shows the sequencer integrated along with the initial proposal board (that was used to play the game - *guessing game*).
 
-https://user-images.githubusercontent.com/56625259/202833896-33fbb748-886b-469d-a4c6-29987b7ea73c.mp4
+https://user-images.githubusercontent.com/56625259/202836260-0ca89f08-c9da-438a-b22f-94af741534e5.mp4
+
 
 - Here, the guessing game proposed in the beginning of the lab was used, along with the `PIO` based sequencer that we created in the duration of the lab.
 - There are various modes which can be activated using `macros`.
