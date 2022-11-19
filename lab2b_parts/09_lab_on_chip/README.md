@@ -1,5 +1,7 @@
 # LAB ON CHIP
 
-The following demonstration video shows color and proximity readings acquired from the `APDS9960` sensor.
+The following demonstration video shows color data acquired from the `APDS9960` sensor, which is sent to the `neopixel` LED, based on highest component of
+red, green and blue.
 
-https://user-images.githubusercontent.com/56625259/202833994-ade44051-3877-4790-85ee-393adac2a2f1.mp4
+
+https://user-images.githubusercontent.com/56625259/202834329-8c51b2b4-0b48-4430-b95b-483d10ad9b90.mp4
