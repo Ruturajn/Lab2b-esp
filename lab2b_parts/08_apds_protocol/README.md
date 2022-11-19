@@ -2,7 +2,9 @@
 
 The following demonstration video shows color and proximity readings acquired from the `APDS9960` sensor.
 
-https://user-images.githubusercontent.com/56625259/202834564-ca063285-d72a-4f99-a27b-1a153b6dd899.mp4
+
+https://user-images.githubusercontent.com/56625259/202835965-74a1471e-3236-4d28-85d6-d6fb04ee9883.mp4
+
 
 
 - The `APDS9960` sensor was interfaced with the `RP2040` using the `PIO` module.
